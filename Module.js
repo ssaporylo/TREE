@@ -147,15 +147,18 @@ var TreeView = (function() {
     			data: {
 
     			},
-				success: function (data){
+				success: function (data, status, settings){
 					alert(data.message);
-					if (operation == "delete" || operation == 'deletefile'){
+					if (operation == "deletefolder" || operation == 'deletefile'){
 						DeleteNode(node);
 					}
-					else if(operation == "create"){
+					else if(operation == "createfolder"){
 						change_Name(node, node_path);
 					}
-					else if (operation == "rename"){
+					else if (operation == "renamefolder"){
+						change_Name(node, data.folder);
+					}
+					else if (operation == "renamefile"){
 						change_Name(node, data.folder);
 					}
 					else if (operation == "createfile" && !data.error){
@@ -165,8 +168,10 @@ var TreeView = (function() {
 
 				},
 				error: function(error){
-					alert('operation did not perfom');
-					if (operation == "create") {
+
+					var message = JSON.parse(error.responseText).message;
+					alert(message);
+					if (operation == "createfolder" || operation == "createfile") {
 						try {
 							node.previousSibling.classList.add("IsLast");
 						}
@@ -174,6 +179,10 @@ var TreeView = (function() {
 							console.log(err);
 						}
 						node.parentNode.removeChild(node);
+					}
+					else if (operation == "renamefolder" || operation == "renamefile"){
+							node.children[1].lastChild.outerHTML = node.children[1].lastChild.getAttribute("oldname");
+
 					}
 				}
   			})
@@ -186,17 +195,25 @@ var TreeView = (function() {
 		if (NodeParent.lastChild.getAttribute("path")) {
 			if (target.getAttribute("oldname") != "undefined") {
 				var node_path = NodeParent.parentNode.getAttribute("path") + '/' + target.getAttribute("oldname") + '&' + target.value;
-				sendRequest(node_path, NodeParent, "rename");
+				sendRequest(node_path, NodeParent, "renamefolder");
 
 			}
 			else {
 				var node_path = NodeParent.parentNode.getAttribute("path") + '/' + target.value;
-				sendRequest(node_path, NodeParent, "create");
+				sendRequest(node_path, NodeParent, "createfolder");
 			}
 		}
 		else{
-			var node_path = NodeParent.parentNode.getAttribute("path") + '/' + target.value;
-			sendRequest(node_path, NodeParent, "createfile");
+			if (target.getAttribute("oldname") != "undefined") {
+				var node_path = NodeParent.parentNode.getAttribute("path") + '/' + target.getAttribute("oldname") + '&' + target.value;
+				sendRequest(node_path, NodeParent, "renamefile");
+
+			}
+			else {
+				var node_path = NodeParent.parentNode.getAttribute("path") + '/' + target.value;
+				sendRequest(node_path, NodeParent, "createfile");
+			}
+
 		}
 	}
 
@@ -333,7 +350,7 @@ var TreeView = (function() {
 			var node = element.parentNode;
 			try {
 				var node_path = element.nextSibling.getAttribute("path");
-				sendRequest(node_path, node, "delete");
+				sendRequest(node_path, node, "deletefolder");
 			}
 			catch(e){
 				var node_path = element.parentNode.parentNode.getAttribute("path") + '/' + element.innerHTML.split('>')[1]

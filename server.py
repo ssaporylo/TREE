@@ -52,50 +52,96 @@ class myHandler(BaseHTTPRequestHandler):
             mimetype='application/json'
             sendReply = False
 
-        self.send_response(200)
-        self.send_header('Content-type',mimetype)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.end_headers()
+
+        result = {}
+        status = 200
+
         action = self.path.split('=')[0][2:]
         if sendReply == True:
             self.wfile.write(open(self.path[1:]).read())
         else:
             if action == "build":
                 folder_path = self.path.split('=')[-1]
-                data = {'title': folder_path, 'type': 'folder', 'childNodes': _deployTree(folder_path)}
-                self.wfile.write(json.dumps(data))
-            elif action == "create":
+                result = {'title': folder_path, 'type': 'folder', 'childNodes': _deployTree(folder_path)}
+
+
+            elif action == "createfolder":
                 folder_path = self.path.split('=')[-1]
-                print folder_path + '// create folder'
-                os.mkdir(folder_path)
-                self.wfile.write(json.dumps({"message": "folder created"}))
-            elif action == "delete":
+                try:
+                    os.mkdir(folder_path)
+                    result["message"] = "folder created"
+                except Exception, e:
+                    result["message"] = e.strerror
+                    status = 400
+
+
+            elif action == "deletefolder":
                 folder_path = self.path.split('=')[-1]
-                shutil.rmtree(folder_path)
-                self.wfile.write(json.dumps({"message": "folder delete"}))
-            elif action == "rename":
+                try:
+                    shutil.rmtree(folder_path)
+                    result["message"] = "folder deleted"
+                except Exception, e:
+                    result["message"] = e.strerror
+                    status = 400
+
+            elif action == "renamefolder":
                 names = self.path.split('=')[-1].split('&')
                 data = '/'.join(names[0].split('/')[0:-1]) + '/' + names[-1]
-                print names[0], '///', data
-                os.rename(names[0],data)
-                self.wfile.write(json.dumps({"message": "folder rename", "folder": data}))
+                try:
+                    os.rename(names[0],data)
+                    result["message"] = "folder renamed"
+                    result["folder"] = data
+                except Exception, e:
+                    result["message"] = e.strerror
+                    status = 400
+
+            elif action == "renamefile":
+                names = self.path.split('=')[-1].split('&')
+                data = '/'.join(names[0].split('/')[0:-1]) + '/' + names[-1]
+
+                if os.path.isfile(data):
+                    result["message"] = 'file exists'
+                    status = 400
+                else:
+                    try:
+                        os.rename(names[0],data)
+                        result["message"] = "file renamed"
+                        result["folder"] = data
+
+                    except Exception, e:
+                        result["message"] = e.strerror
+                        status = 400
+            
             elif action == "createfile":
                 file_path = self.path.split('=')[-1]
-                print file_path
-                res = {}
+
                 try:
                     f = open(file_path, 'r')
-                    res["message"] = 'file exists'
-                    res["error"] = 'True'
+                    result["message"] = 'file exists'
+                    status = 400
                 except IOError:
-                    res["message"] = 'file created'
+                    result["message"] = 'file created'
                     f = open(file_path, 'w')
                 f.close()
-                self.wfile.write(json.dumps(res))
+
             elif action == 'deletefile':
                 file_path = self.path.split('=')[-1]
-                os.remove(file_path)
-                self.wfile.write(json.dumps({"message": "file delete"}))
+                try:
+                    os.remove(file_path)
+                    result["message"] = 'file deleted'
+                except Exception, e:
+                    result["message"] = e.strerror
+                    status = 400
+
+
+            self.send_response(status)
+            self.send_header('Content-type',mimetype)
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            if result:
+                print action,'////', self.path, '//////', result
+                self.wfile.write(json.dumps(result))
+
         return
         #
         # Send the html message
