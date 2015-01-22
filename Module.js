@@ -137,7 +137,7 @@ var TreeView = (function() {
 		 return newElem;		
 	}
 	function sendRequest(node_path, node, operation){
-		var link = "http://localhost:8182/?" + operation + "="+ node_path;
+		var link = "http://localhost:8183/?" + operation + "="+ node_path;
 
 		$.ajax(link, {
     			type: 'GET',
@@ -500,7 +500,7 @@ var ContextMenu = (    function() {
 
 window.onload = function (){
 	var name = prompt("Enter path",'/');
-	var link = "http://localhost:8182/?build=" + name;
+	var link = "http://localhost:8183/?build=" + name;
 	$.ajax(link, {
     			type: 'GET',
 				crossDomain: true,
