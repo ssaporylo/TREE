@@ -1,5 +1,9 @@
 import os
 import shutil
+import pwd
+import grp
+import time
+from collections import OrderedDict
 
 def deployTree(elem):
     f=[]
@@ -124,4 +128,38 @@ def deleteFile(path):
     except Exception, e:
         result["message"] = e.strerror
         result["status"] = 400
+    return result
+
+
+def infoFolder(path):
+    result = {"status": 200}
+    folder_path = path.split('=')[-1]
+    try:
+        statistic = os.stat(folder_path)
+    except Exception, e:
+        result["message"] = e.strerror
+        result["status"] = 400
+        return result
+    (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = statistic
+    res = OrderedDict()
+    res['Create_time'] =  time.ctime(mtime)
+    res['User'] = pwd.getpwuid(uid)[0]
+    res['Group'] = grp.getgrgid(gid)[0]
+    res['Size'] = size
+    res['Folders'] = 0
+    res['Files'] = 0
+    for (name,directories,files) in os.walk(folder_path):
+        if directories:
+            res['Folders']+=len(directories)
+
+        if files:
+           count = 0
+           for i in files:
+                if i.endswith('~'):
+                    continue
+                count+=1
+           res['Files'] +=count
+    result['data'] =''
+    for i in res:
+        result['data'] += "<span><b>{0}</b>: {1}</span>;  ".format(i.replace('_', ' '), res[i])
     return result

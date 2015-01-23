@@ -29,6 +29,8 @@ def view(action, path):
 
     elif action == 'deletefile':
         result = Views.deleteFile(path)
+    elif action == 'infofolder':
+        result = Views.infoFolder(path)
 
     return result
 

@@ -1,4 +1,4 @@
-function buildTree(result){
+function buildTree(result, name){
 	var treeJSON = {title: "root", type: "folder", childNodes: [
 		{title: "folder 1", type: "folder", childNodes: [
 			{title: "file 1", type: "file"}
@@ -19,7 +19,7 @@ function buildTree(result){
 	]);
 
 	treeView = TreeView;
-	treeView.BuildTree(result);
+	treeView.BuildTree(result, name);
 	treeView.onItemRightClick = function(clickedElem){
 		
 		contextMenu.show(clickedElem);
@@ -148,23 +148,30 @@ var TreeView = (function() {
 
     			},
 				success: function (data, status, settings){
-					alert(data.message);
+
 					if (operation == "deletefolder" || operation == 'deletefile'){
 						DeleteNode(node);
+						alert(data.message);
 					}
 					else if(operation == "createfolder"){
 						change_Name(node, node_path);
+						alert(data.message);
 					}
 					else if (operation == "renamefolder"){
 						change_Name(node, data.folder);
+						alert(data.message);
 					}
 					else if (operation == "renamefile"){
 						change_Name(node, data.folder);
+						alert(data.message);
 					}
 					else if (operation == "createfile" && !data.error){
 						change_Name(node,node_path);
+						alert(data.message);
 					}
-
+					else if (operation == "infofolder"){
+						document.getElementById("info").innerHTML = data.data;
+					}
 
 				},
 				error: function(error){
@@ -244,6 +251,9 @@ var TreeView = (function() {
 		if ( !parentNode )	{
 			 document.getElementById('cur_position').innerHTML = Array.title;
 			 var El =document.createElement('div');
+			 El.setAttribute("id", "tree_view");
+			 El.style.height = "500px";
+			 El.style.overflow = "scroll";
 			 El.innerHTML = Array.title + '<ul class=\"Container\" path=' + Array.title + '></ul>';
 		                  document.body.appendChild(El);
 			 parentNode = El.children[0];
@@ -285,11 +295,14 @@ var TreeView = (function() {
 		if (hasClass(node, 'ExpandLeaf') ) {  
 			return // clicked on Leaf  
 		}
+		var node_path = node.lastChild.getAttribute("path");
+
 		// determine New Class
 
 		var newClass = hasClass(node, 'ExpandOpen') ? 'ExpandClosed' : 'ExpandOpen';
 		var cur_pos = document.getElementById('cur_position').innerHTML;
 		cur_pos = hasClass(node, 'ExpandClosed') ? node.lastChild.getAttribute('path') : node.parentNode.getAttribute('path');
+		sendRequest(cur_pos, node, 'infofolder');
   		document.getElementById('cur_position').innerHTML = cur_pos;
   		// change the old Class to the new one  
 		// find 'open' or 'close' and change in the opposite  
@@ -312,8 +325,10 @@ var TreeView = (function() {
 		bindEvents (node, OldName);
 	}
 	return	{
-		BuildTree: function(treeJSON) {
-			Create(treeJSON)
+		BuildTree: function(treeJSON, name) {
+			Create(treeJSON);
+			sendRequest(name,"False", "infofolder");
+
 		},
 		Show: function (clickedElem) {
 			ShowNodeContent (clickedElem)
@@ -497,15 +512,17 @@ window.onload = function (){
     			},
 				success: function (data){
 					console.log('1111111111');
-					buildTree(data);
+					buildTree(data,name);
 
 				},
 				error: function(error){
 					var data = JSON.parse(error.responseText);
-					buildTree(data[0]);
+					buildTree(data[0], name);
 				}
   			})
+
 };
 document.body.oncontextmenu=function () { 
 	return false;  
 }
+
