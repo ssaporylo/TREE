@@ -9,7 +9,7 @@
 
 /* indent for all tree children excepts root */
 .Node {
-    background-image : url(img/i.gif);
+    background-image : url(../img/i.gif);
     background-position : top left;
     background-repeat : repeat-y;
     
@@ -21,24 +21,24 @@
 }
 /* left vertical line (grid) for all nodes */
 .IsLast {
-    background-image: url(img/i_half.gif);
+    background-image: url(../img/i_half.gif);
     background-repeat : no-repeat;
 }
 .IsFirst {
-    background-image: url(img/i_bhalf.gif);
+    background-image: url(../img/i_bhalf.gif);
     background-repeat : no-repeat;
     background-position : 0% 100% ;
 }
 .ExpandOpen .Expand {
-    background-image: url(img/expand_minus.gif);
+    background-image: url(../img/expand_minus.gif);
 }
 /* closed is higher priority than open */
 .ExpandClosed .Expand {
-    background-image: url(img/expand_plus.gif);
+    background-image: url(../img/expand_plus.gif);
 }
 /* highest priority */
 .ExpandLeaf .Expand {
-    background-image: url(img/expand_leaf.gif);
+    background-image: url(../img/expand_leaf.gif);
 }
 
 
@@ -73,7 +73,7 @@
     width: 18px;
     height: 18px;
     float: left;
-    background-image: url(img/expand_loading.gif);
+    background-image: url(../img/expand_loading.gif);
 }
 .ExpandOpen .Container {
 	display: block;

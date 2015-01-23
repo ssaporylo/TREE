@@ -114,11 +114,11 @@ var TreeView = (function() {
 		nodeParent = node.parentNode;
 		for (i=0;i<nodeParent.children.length; i++) {
 			var CompareElem =nodeParent.children[i];
-                			var CloseContent = '<img class="Image" src="img/closed.gif">' + newElem;
-              			var OpenContent = '<img class="Image" src="img/open.gif">' + newElem;
-              			var File = '<img class="Image" src="img/document.gif">'+ newElem;
+                			var CloseContent = '<img class="Image" src="../img/closed.gif">' + newElem;
+              			var OpenContent = '<img class="Image" src="../img/open.gif">' + newElem;
+              			var File = '<img class="Image" src="../img/document.gif">'+ newElem;
 			var contentEl = CompareElem.children[1].innerHTML;
-			if (contentEl == '<img class="Image" src="img/open.gif">') { 
+			if (contentEl == '<img class="Image" src="../img/open.gif">') {
 				continue;
 			}
                			if (contentEl === OpenContent || contentEl == CloseContent || contentEl == File )  {
@@ -137,7 +137,7 @@ var TreeView = (function() {
 		 return newElem;		
 	}
 	function sendRequest(node_path, node, operation){
-		var link = "http://localhost:8183/?" + operation + "="+ node_path;
+		var link = window.location.origin + "\/?" + operation + "="+ node_path;
 
 		$.ajax(link, {
     			type: 'GET',
@@ -192,29 +192,15 @@ var TreeView = (function() {
 		var target = e.target;
 		var node = target.parentNode;
 		var NodeParent = node.parentNode;
-		if (NodeParent.lastChild.getAttribute("path")) {
+
 			if (target.getAttribute("oldname") != "undefined") {
 				var node_path = NodeParent.parentNode.getAttribute("path") + '/' + target.getAttribute("oldname") + '&' + target.value;
-				sendRequest(node_path, NodeParent, "renamefolder");
-
+				sendRequest(node_path, NodeParent, NodeParent.lastChild.getAttribute("path")? "renamefolder": "renamefile");
 			}
 			else {
 				var node_path = NodeParent.parentNode.getAttribute("path") + '/' + target.value;
-				sendRequest(node_path, NodeParent, "createfolder");
+				sendRequest(node_path, NodeParent, NodeParent.lastChild.getAttribute("path")? "createfolder": "createfile");
 			}
-		}
-		else{
-			if (target.getAttribute("oldname") != "undefined") {
-				var node_path = NodeParent.parentNode.getAttribute("path") + '/' + target.getAttribute("oldname") + '&' + target.value;
-				sendRequest(node_path, NodeParent, "renamefile");
-
-			}
-			else {
-				var node_path = NodeParent.parentNode.getAttribute("path") + '/' + target.value;
-				sendRequest(node_path, NodeParent, "createfile");
-			}
-
-		}
 	}
 
 	function change_Name(node, node_path){
@@ -500,7 +486,7 @@ var ContextMenu = (    function() {
 
 window.onload = function (){
 	var name = prompt("Enter path",'/');
-	var link = "http://localhost:8183/?build=" + name;
+	var link = window.location.origin + "/?build=" + name;
 	$.ajax(link, {
     			type: 'GET',
 				crossDomain: true,

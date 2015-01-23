@@ -29,25 +29,28 @@ def find_tree(folder, folder_path):
     return folder
 
 find_tree([],'/home/user/projects/Tests')"""
-import os
+# import os
+#
+# def find_tree(folder_path):
+#     print folder_path
+#     f=[]
+#     folder = []
+#
+#     for i in os.walk(folder_path):
+#         f.extend(i)
+#         break
+#     folder.extend({'title': i,'type': 'folder', 'childNodes':find_tree(f[0] + '/' + i)} for i in f[1])
+#
+#     try:
+#         folder.extend({'title': i, 'type': 'file'} for i in f[2])
+#     except:
+#         pass
+#     return folder
+#
+# s = find_tree('/home/user/projects/Tests')
+#
+# print s[0]["childNodes"][1]
+from TREE.Views import Views
 
-def find_tree(folder_path):
-    print folder_path
-    f=[]
-    folder = []
-
-    for i in os.walk(folder_path):
-        f.extend(i)
-        break
-    folder.extend({'title': i,'type': 'folder', 'childNodes':find_tree(f[0] + '/' + i)} for i in f[1])
-
-    try:
-        folder.extend({'title': i, 'type': 'file'} for i in f[2])
-    except:
-        pass
-    return folder
-
-s = find_tree('/home/user/projects/Tests')
-
-print s[0]["childNodes"][1]
-
+print dir(Views)
+print Views.__file__
