@@ -308,13 +308,20 @@ var TreeView = (function() {
 		var newClass = hasClass(node, 'ExpandOpen') ? 'ExpandClosed' : 'ExpandOpen';
 		var cur_pos = document.getElementById('cur_position').innerHTML;
 		cur_pos = hasClass(node, 'ExpandClosed') ? node.lastChild.getAttribute('path') : node.parentNode.getAttribute('path');
+        if (node.classList.contains('ExpandClosed')){
+            var offset = node.lastChild.clientHeight -(document.getElementById("tree_view").clientHeight - node.offsetTop);
+            if (offset>0){
+                document.getElementById("tree_view").scrollTop += 36;
+            }
+        }
 		sendRequest(cur_pos, node, 'infofolder');
   		document.getElementById('cur_position').innerHTML = cur_pos;
+
   		// change the old Class to the new one  
 		// find 'open' or 'close' and change in the opposite  
 		var re =  /(^|\s)(ExpandOpen|ExpandClosed)(\s|$)/  
 		node.className = node.className.replace(re, '$1'+newClass+'$3');
-		ChangeImageFolder(node); 
+        ChangeImageFolder(node);
 	}  
 	function RenameNode () { 
 		clickedElem = document.getElementsByClassName('ContentSelect')[0];
