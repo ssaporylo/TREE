@@ -1,0 +1,16 @@
+Requires:
+1. Python
+2  Browser
+3. Unix
+
+Run:
+    Go into folder and run python server.py arg1 arg2, where
+    * arg1 - browser name. For example 'google-chrome'
+    * arg2 - port number
+
+
+Opportunity:
+    * view file system in "Tree" mode
+    * add, delete, rename nodes
+    * view info about nodes
+    * open text file using gedit
