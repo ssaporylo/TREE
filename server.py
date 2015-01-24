@@ -1,10 +1,10 @@
 #!/usr/bin/python
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 import json
-
+import sys
 from Views import Views
 
-PORT_NUMBER = 8183
+
 
 
 def view(action, path):
@@ -31,6 +31,8 @@ def view(action, path):
         result = Views.deleteFile(path)
     elif action == 'infofolder':
         result = Views.infoFolder(path)
+    elif action == 'infofile':
+        result = Views.infoFile(path)
 
     return result
 
@@ -88,15 +90,17 @@ class myHandler(BaseHTTPRequestHandler):
 
         return
 
-try:
-    #Create a web server and define the handler to manage the
-    #incoming request
-    server = HTTPServer(('', PORT_NUMBER), myHandler)
-    print 'Started httpserver on port ' , PORT_NUMBER
+if __name__ == "__main__":
+    try:
+        #Create a web server and define the handler to manage the
+        #incoming request
+        server = HTTPServer(('', int(sys.argv[1])), myHandler)
+        print 'Started httpserver on port ' , sys.argv[1]
 
-    #Wait forever for incoming htto requests
-    server.serve_forever()
+        #Wait forever for incoming htto requests
+        server.serve_forever()
 
-except KeyboardInterrupt:
-    print '^C received, shutting down the web server'
-    server.socket.close()
+    except KeyboardInterrupt:
+        print '^C received, shutting down the web server'
+        server.socket.close()
+

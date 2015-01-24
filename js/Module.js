@@ -169,7 +169,7 @@ var TreeView = (function() {
 						change_Name(node,node_path);
 						alert(data.message);
 					}
-					else if (operation == "infofolder"){
+					else if (operation == "infofolder" || operation == "infofile"){
 						document.getElementById("info").innerHTML = data.data;
 					}
 
@@ -292,7 +292,10 @@ var TreeView = (function() {
 		// Node, which clicked  /*hasClass(clickedElem, 'Expand')*/
 	 	var node = clickedElem.parentNode;
             		var nodeParent = node.parentNode;
-		if (hasClass(node, 'ExpandLeaf') ) {  
+		if (hasClass(node, 'ExpandLeaf') ) {
+			var cur_pos = nodeParent.getAttribute("path") + '/' + node.children[1].innerText;
+			document.getElementById('cur_position').innerHTML = cur_pos;
+			sendRequest(cur_pos, node, 'infofile');
 			return // clicked on Leaf  
 		}
 		var node_path = node.lastChild.getAttribute("path");

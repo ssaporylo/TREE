@@ -131,6 +131,7 @@ def deleteFile(path):
     return result
 
 
+
 def infoFolder(path):
     result = {"status": 200}
     folder_path = path.split('=')[-1]
@@ -159,6 +160,27 @@ def infoFolder(path):
                     continue
                 count+=1
            res['Files'] +=count
+    result['data'] =''
+    for i in res:
+        result['data'] += "<span><b>{0}</b>: {1}</span>;  ".format(i.replace('_', ' '), res[i])
+    return result
+
+
+def infoFile(path):
+    result = {"status": 200}
+    folder_path = path.split('=')[-1]
+    try:
+        statistic = os.stat(folder_path)
+    except Exception, e:
+        result["message"] = e.strerror
+        result["status"] = 400
+        return result
+    (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = statistic
+    res = OrderedDict()
+    res['Create_time'] =  time.ctime(mtime)
+    res['User'] = pwd.getpwuid(uid)[0]
+    res['Group'] = grp.getgrgid(gid)[0]
+    res['Size'] = size
     result['data'] =''
     for i in res:
         result['data'] += "<span><b>{0}</b>: {1}</span>;  ".format(i.replace('_', ' '), res[i])
