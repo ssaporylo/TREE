@@ -464,6 +464,21 @@ var ContextMenu = (    function() {
 		var tooltipElem =  document.getElementById ('ContentContextMenu');
 		tooltipElem.style.display = 'inline';
                                     deselect ();
+
+        var node = clickedElem.parentNode;
+        if (node.classList.contains("ExpandLeaf")) {
+			document.getElementById("create_folder").style.display = "none";
+            document.getElementById("create_folder").nextSibling.style.display = "none";
+            document.getElementById("create_file").style.display = "none";
+            document.getElementById("create_file").nextSibling.style.display = "none";
+		}
+        else{
+            for (i=0;i<tooltipElem.children.length; i++) {
+                if(tooltipElem.children[i].style.display == "none"){
+                    tooltipElem.children[i].style.display = "inline";
+                }
+            }
+        }
 		clickedElem.classList.add('ContentSelect'); 
 		var coords = getCoords(clickedElem); 
 		var scroll = getPageScroll();

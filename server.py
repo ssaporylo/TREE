@@ -2,7 +2,7 @@
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 import json
 
-from TREE.Views import Views
+from Views import Views
 
 PORT_NUMBER = 8183
 
@@ -75,6 +75,7 @@ class myHandler(BaseHTTPRequestHandler):
             self.wfile.write(open(self.path[1:]).read())
 
         elif sendReply == "JSON":
+            
             result = view(action,self.path)
             self.send_response(result["status"])
             self.send_header('Content-type',mimetype)
