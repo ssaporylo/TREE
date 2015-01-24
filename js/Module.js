@@ -14,6 +14,7 @@ function buildTree(result, name){
 	contextMenu.addItems([
 		{id: "create_folder", value: "Create folder"}, 
 		{id: "create_file", value: "Create file"},
+		{id: "open_file", value: "Open"},
 		{id: "rename_selected", value: "Rename selected"},
 		{id: "delete_selected", value: "Delete selected"}
 	]);
@@ -35,11 +36,13 @@ function buildTree(result, name){
 		} else if (selectedId == "create_file"){
 			 treeView.addNode("file");
 		} else if (selectedId == "delete_selected"){
-			treeView.removeNode ()
+			treeView.removeNode ();
+		} else if (selectedId == "rename_selected"){
+			treeView.renameNode ();
+		} else if (selectedId == "open_file"){
+			treeView.openFile();
 		}
-		   else if (selectedId == "rename_selected"){
-			treeView.renameNode ()
-		}
+
 	}
 }
 
@@ -365,6 +368,12 @@ var TreeView = (function() {
 		renameNode: function(){ 
 			RenameNode()
 		},
+		openFile: function(){
+			var element = document.getElementsByClassName('ContentSelect')[0];
+			var node = element.parentNode;
+			var node_path = node.parentNode.getAttribute("path") + '/' + element.innerText;
+			sendRequest(node_path, node, "openfile");
+		},
 		onItemRightClick: null
 	} 	
 
@@ -474,6 +483,8 @@ var ContextMenu = (    function() {
             document.getElementById("create_folder").nextSibling.style.display = "none";
             document.getElementById("create_file").style.display = "none";
             document.getElementById("create_file").nextSibling.style.display = "none";
+			document.getElementById("open_file").style.display = "inline";
+            document.getElementById("open_file").nextSibling.style.display = "inline";
 		}
         else{
             for (i=0;i<tooltipElem.children.length; i++) {
@@ -481,6 +492,8 @@ var ContextMenu = (    function() {
                     tooltipElem.children[i].style.display = "inline";
                 }
             }
+			document.getElementById("open_file").style.display = "none";
+            document.getElementById("open_file").nextSibling.style.display = "none";
         }
 		clickedElem.classList.add('ContentSelect'); 
 		var coords = getCoords(clickedElem); 

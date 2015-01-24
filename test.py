@@ -50,36 +50,50 @@ find_tree([],'/home/user/projects/Tests')"""
 # s = find_tree('/home/user/projects/Tests')
 #
 # print s[0]["childNodes"][1]
+# import os
+# import time
+# import grp
+# import pwd
+# result = {}
+# path = "/home/user/projects/Tests/34"
+# (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(path)
+# print os.stat(path)
+# result['create_time'] =  time.ctime(mtime)
+# result['user'] = pwd.getpwuid(uid)[0]
+# result['group'] = grp.getgrgid(gid)[0]
+# result['size'] = size
+# # result['folders'] = 0
+# # result['files'] = 0
+# # for (name,directories,files) in os.walk(path):
+# #     print (name,directories,files)
+# #     if directories:
+# #         result['folders']+=len(directories)
+# #     if files:
+# #         count = 0
+# #         for i in files:
+# #             if i.endswith('~'):
+# #                 continue
+# #             #print count
+# #             count+=1
+# #
+# #         result['files'] +=count
+# # #print result['files']
+# # result  = {"folders": 283, "group": "root", "create_time": "Wed Jan 21 23:59:04 2015", "user": "root", "files": 3338, "size": 12288}
+# str = ''
+# for i in result:
+#     str+="<span><b>{0}</b>: {1}</span>".format(i.replace('_', ' '), result[i])
+# print str
 import os
-import time
-import grp
-import pwd
-result = {}
-path = "/home/user/projects/Tests/34"
-(mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(path)
-print os.stat(path)
-result['create_time'] =  time.ctime(mtime)
-result['user'] = pwd.getpwuid(uid)[0]
-result['group'] = grp.getgrgid(gid)[0]
-result['size'] = size
-# result['folders'] = 0
-# result['files'] = 0
-# for (name,directories,files) in os.walk(path):
-#     print (name,directories,files)
-#     if directories:
-#         result['folders']+=len(directories)
-#     if files:
-#         count = 0
-#         for i in files:
-#             if i.endswith('~'):
-#                 continue
-#             #print count
-#             count+=1
-#
-#         result['files'] +=count
-# #print result['files']
-# result  = {"folders": 283, "group": "root", "create_time": "Wed Jan 21 23:59:04 2015", "user": "root", "files": 3338, "size": 12288}
-str = ''
-for i in result:
-    str+="<span><b>{0}</b>: {1}</span>".format(i.replace('_', ' '), result[i])
-print str
+from multiprocessing import Process
+def f(name):
+    os.system('gedit')
+def g(name):
+    os.system('google-chrome')
+processes =[]
+p = Process(target=f, args=('bob',))
+p.start()
+processes.append(p)
+p = Process(target=g, args=('bob',))
+p.start()
+for p in processes:
+    p.join()

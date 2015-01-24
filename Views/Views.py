@@ -185,3 +185,14 @@ def infoFile(path):
     for i in res:
         result['data'] += "<span><b>{0}</b>: {1}</span>;  ".format(i.replace('_', ' '), res[i])
     return result
+
+def openFile(path):
+    file_path = path.split('=')[-1]
+    result = {"status": 200}
+    try:
+        os.system('gedit {}'.format(file_path))
+    except Exception, e:
+        result["message"] = e.strerror
+        result["status"] = 400
+    return result
+
