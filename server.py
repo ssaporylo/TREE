@@ -114,22 +114,8 @@ def Open_browser(name, port):
     os.system(string)
 
 from multiprocessing import Process
-if __name__ == "__main__":
 
-    # try:
-    #     #Create a web server and define the handler to manage the
-    #     #incoming request
-    #     server = HTTPServer(('', int(sys.argv[1])), myHandler)
-    #     print 'Started httpserver on port ' , sys.argv[1]
-    #
-    #     #Wait forever for incoming htto requests
-    #     server.serve_forever()
-    #     #os.system("google-chrome localhost:{}".format(sys.argv[1]))
-    #     string  = "google-chrome http://localhost:{}/".format(sys.argv[1])
-    #     os.system(string)
-    # except KeyboardInterrupt:
-    #     print '^C received, shutting down the web server'
-    #     server.socket.close()
+if __name__ == "__main__":
     processes =[]
     p = Process(target=Create_server, args=(int(sys.argv[2]),))
     p.start()

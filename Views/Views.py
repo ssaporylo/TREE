@@ -146,7 +146,8 @@ def infoFolder(path):
     res['Create_time'] =  time.ctime(mtime)
     res['User'] = pwd.getpwuid(uid)[0]
     res['Group'] = grp.getgrgid(gid)[0]
-    res['Size'] = size
+    import commands
+    res['Size'] = commands.getoutput('du -sh {}'.format(folder_path)).split()[0]
     res['Folders'] = 0
     res['Files'] = 0
     for (name,directories,files) in os.walk(folder_path):
@@ -180,7 +181,8 @@ def infoFile(path):
     res['Create_time'] =  time.ctime(mtime)
     res['User'] = pwd.getpwuid(uid)[0]
     res['Group'] = grp.getgrgid(gid)[0]
-    res['Size'] = size
+    import commands
+    res['Size'] = commands.getoutput('du -sh {}'.format(folder_path)).split()[0]
     result['data'] =''
     for i in res:
         result['data'] += "<span><b>{0}</b>: {1}</span>;  ".format(i.replace('_', ' '), res[i])
